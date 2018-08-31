@@ -125,7 +125,6 @@ GUI = (ENV["GUI"].to_s.downcase == "true")
 USE_KUBE_UI = ENV["USE_KUBE_UI"] || false
 
 BOX_TIMEOUT_COUNT = ENV["BOX_TIMEOUT_COUNT"] || 50
-BOX_TIMEOUT_COUNT = BOX_TIMEOUT_COUNT.to_i
 
 if enable_proxy
   HTTP_PROXY = ENV["HTTP_PROXY"] || ENV["http_proxy"]
