@@ -202,7 +202,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   nodeNames = NODE_NAMES.split(',')
   if nodeNames.length != 0 && NODES.to_i != nodeNames.length
-    info "If you set NODE_NAMES, NODES and count of NODE_NAMES must match."
+    puts "If you set NODE_NAMES, NODES and count of NODE_NAMES must match."
     exit
   end
 
