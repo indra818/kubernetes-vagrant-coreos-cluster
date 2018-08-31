@@ -80,7 +80,7 @@ CERTS_NODE_CONF = File.join(File.dirname(__FILE__), "tls/openssl-node.cnf.tmpl")
 MANIFESTS_DIR = Pathname.getwd().join("manifests")
 
 USE_DOCKERCFG = ENV["USE_DOCKERCFG"] || false
-DOCKERCFG = File.expand_path(ENV["DOCKERCFG"] || "~/.dockercfg")
+DOCKERCFG = File.expand_path(ENV["DOCKERCFG"] || "~/.docker/config.json")
 
 DOCKER_OPTIONS = ENV["DOCKER_OPTIONS"] || ""
 
@@ -512,10 +512,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       if USE_DOCKERCFG && File.exist?(DOCKERCFG)
         kHost.vm.provision :file, run: "always",
-                                  :source => "#{DOCKERCFG}", :destination => "/home/core/.dockercfg"
+                                  :source => "#{DOCKERCFG}", :destination => "/home/core/.docker/config.json"
 
         kHost.vm.provision :shell, run: "always" do |s|
-          s.inline = "cp /home/core/.dockercfg /root/.dockercfg"
+          s.inline = "mkdir -p /root/.docker && cp -R /home/core/.docker/config.json /root/.docker/config.json"
           s.privileged = true
         end
       end
