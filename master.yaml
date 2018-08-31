@@ -136,7 +136,7 @@ coreos:
             /hyperkube kubelet \
             --containerized \
             --address=$private_ipv4 \
-            --register-schedulable=false \
+            --register-schedulable=true \
             --allow-privileged=true \
             --pod-manifest-path=/etc/kubernetes/manifests \
             --hostname-override=__NAME__ \
