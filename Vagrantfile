@@ -108,7 +108,6 @@ if COREOS_VERSION == "latest"
 end
 
 NODES = ENV["NODES"] || 2
-NODE_NAMES = ENV["NODE_NAMES"] || ""
 
 MASTER_MEM = ENV["MASTER_MEM"] || 1024
 MASTER_CPUS = ENV["MASTER_CPUS"] || 2
@@ -199,11 +198,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.proxy.enabled = {docker: false}
   end
 
-  nodeNames = NODE_NAMES.split(',')
-  if nodeNames.length != 0 && NODES.to_i != nodeNames.length
-    puts "If you set NODE_NAMES, NODES and count of NODE_NAMES must match."
-    exit
-  end
+
 
   (1..(NODES.to_i + 1)).each do |i|
     if i == 1
@@ -214,7 +209,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cpus = MASTER_CPUS
       MASTER_IP = "#{BASE_IP_ADDR}.#{i + 100}"
     else
-      hostname = nodeNames.length != 0 ? nodeNames[i-2] : "node-%02d" % (i - 1)
+      hostname = "node-%02d" % (i - 1)
       cfg = NODE_YAML
       memory = NODE_MEM
       cpus = NODE_CPUS
@@ -222,10 +217,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.define vmName = hostname do |kHost|
       kHost.vm.hostname = vmName
-
-      kHost.vm.provider "virtualbox" do |v| 
-        v.name = vmName 
-      end
 
       # suspend / resume is hard to be properly supported because we have no way
       # to assure the fully deterministic behavior of whatever is inside the VMs
@@ -552,7 +543,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         if vmName == "master"
           if AUTHORIZATION_MODE == "RBAC"
             kHost.vm.provision :shell, run: "always" do |s|
-              s.inline = "mkdir -p /etc/kubernetes/manifests && find /vagrant/manifests/master* ! -name master-apiserver.yaml -exec cp -t /etc/kubernetes/manifests {} +"
+              s.inline = "mkdir -p /etc/kubernetes/manifests && find /vagrant/manifests/master* ! -name master-apiserver-rbac.yaml -exec cp -t /etc/kubernetes/manifests {} +"
               s.privileged = true
             end
           else

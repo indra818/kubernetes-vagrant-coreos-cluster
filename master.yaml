@@ -136,14 +136,15 @@ coreos:
             /hyperkube kubelet \
             --containerized \
             --address=$private_ipv4 \
-            --register-schedulable=true \
+            --register-schedulable=false \
             --allow-privileged=true \
             --pod-manifest-path=/etc/kubernetes/manifests \
-            --hostname-override=__NAME__ \
+            --hostname-override=$public_ipv4 \
             --cluster_dns=10.100.0.10 \
             --cluster_domain=__DNS_DOMAIN__ \
             --kubeconfig=/etc/kubernetes/master-kubeconfig.yaml \
             --network-plugin=cni \
+            --node-labels=node-role.kubernetes.io/master \
             --pod-cidr=__CLUSTER_CIDR__
         Restart=on-failure
         RestartSec=10
